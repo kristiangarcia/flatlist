@@ -1,4 +1,4 @@
-import { Alert, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import { calcularDivisores, toEnteroPositivo } from './utils/Funciones'
 import CajaDivisor from './components/CajaDivisor'
@@ -6,12 +6,14 @@ import CajaDivisor from './components/CajaDivisor'
 export default function App() {
   const [texto, setTexto] = useState("")
   const [listaDivisores, setListaDivisores] = useState<Array<number>>([])
+  const [modalVisible, setModalVisible] = useState(false)
 
   function aceptarPulsado() {
     const {exito,valor} = toEnteroPositivo(texto)
     if(exito) {
       const lista = calcularDivisores(valor)
       setListaDivisores(lista)
+      setModalVisible(true)
     }
     else {
       Alert.alert("Error","Debe introducirse un número entero positivo")
@@ -32,14 +34,19 @@ export default function App() {
           onPress={aceptarPulsado}>
           <Text style={styles.textoBoton}>Aceptar</Text>
         </Pressable>
-      </View>
-      <View style={styles.contenedorSecundario}>
-        <FlatList
-          data={listaDivisores}
-          renderItem={CajaDivisor}
-          keyExtractor={ numero => numero.toString() }
-          numColumns={5}
-        />
+        {
+          modalVisible && (
+            <Modal animationType={"slide"} transparent={true}>
+              <Pressable onPress={ () => setModalVisible(false)} style={styles.zonaSuperiorModal}/>
+                <FlatList
+                  data={listaDivisores}
+                  renderItem={CajaDivisor}
+                  keyExtractor={ numero => numero.toString() }
+                  numColumns={5}
+                />
+            </Modal>
+          )
+        }
       </View>
     </View>
   )
@@ -105,4 +112,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
+  zonaSuperiorModal: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.1)"
+  },
+  zonaInferiorModal: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 32,
+    alignItems: "center"
+  }
 })
