@@ -8,10 +8,10 @@ export default function App() {
   const [listaDivisores, setListaDivisores] = useState<Array<number>>([])
   const [modalVisible, setModalVisible] = useState(false)
 
-  function aceptarPulsado() {
+  async function aceptarPulsado() {
     const {exito,valor} = toEnteroPositivo(texto)
     if(exito) {
-      const lista = calcularDivisores(valor)
+      const lista = await calcularDivisores(valor)
       setListaDivisores(lista)
       setModalVisible(true)
     }

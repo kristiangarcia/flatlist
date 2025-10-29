@@ -9,7 +9,7 @@ function toEnteroPositivo(cadenaTexto: string):ResultadoConversion {
     const exito = expresionRegular.test(cadenaTexto)
     return { valor, exito }
 }
-function calcularDivisores(numero: number):Array<number> {
+async function calcularDivisores(numero: number):Promise<Array<number>> {
     const lista = []
     for(let i=1;i<=numero;i++){
         if(numero%i===0){
